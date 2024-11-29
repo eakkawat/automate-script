@@ -36,6 +36,9 @@ setup_jest_testing() {
         jest-environment-jsdom \
         identity-obj-proxy
 
+    # Downgrade nwsapi to 2.2.13 as the latest version has a problem with jsdom environment
+    pnpm add -D nwsapi@2.2.13
+
     # Create Jest configuration
     echo -e "${GREEN}Creating Jest configuration...${NC}"
     cat > jest.config.cjs << EOL
