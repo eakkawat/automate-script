@@ -84,7 +84,7 @@ EOL
 
 # Setup project function
 setup_react_project() {
-    # Project name input
+    ##### Project name input
     read -p "Enter project name: " PROJECT_NAME
 
     # Validate project name
@@ -93,10 +93,11 @@ setup_react_project() {
         exit 1
     fi
 
-    # Ask about Jest testing
+    ##### Ask about Jest testing
     read -p "Would you like to set up Jest testing? (yes/no): " INSTALL_JEST
     INSTALL_JEST=$(echo "$INSTALL_JEST" | tr '[:upper:]' '[:lower:]')
 
+########## MAIN PROJECT INSTALLATION ##########
     # Create Vite React TypeScript project
     echo -e "${GREEN}Creating Vite React TypeScript project...${NC}"
     mkdir "$PROJECT_NAME"
@@ -128,10 +129,11 @@ setup_react_project() {
 
 
     # Conditionally install Jest if user agrees
-    if [[ "$INSTALL_JEST" == "yes" ]]; then
+    if [[ "$INSTALL_JEST" == "yes" || "$INSTALL_JEST" == 'y' ]]; then
         setup_jest_testing
     fi
 
+########### CONFIGURATION ##########
     # Create ESLint configuration
     echo -e "${GREEN}Creating ESLint configuration...${NC}"
     cat > .eslintrc.json << EOL
@@ -221,7 +223,7 @@ EOL
     "eslint.run": "onType"
 }
 EOL
-
+########### END CONFIGURATION ##########
     # Initial commit
     git add .
     git commit -m "Initial project setup with React, TypeScript, ESLint, and Prettier"
@@ -231,7 +233,7 @@ EOL
     echo -e "cd $PROJECT_NAME && pnpm run dev"
 
     # Provide testing instructions if Jest was installed
-    if [[ "$INSTALL_JEST" == "yes" ]]; then
+    if [[ "$INSTALL_JEST" == "yes" || "$INSTALL_JEST" == 'y' ]]; then
         echo -e "${GREEN}Testing setup:${NC}"
         echo -e "- Run tests: ${YELLOW}npm test${NC}"
         echo -e "- Watch tests: ${YELLOW}npm run test:watch${NC}"
