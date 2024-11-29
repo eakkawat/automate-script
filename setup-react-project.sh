@@ -26,7 +26,7 @@ setup_jest_testing() {
     echo -e "${GREEN}Setting up Jest testing...${NC}"
     
     # Install Jest and related dependencies
-    npm install --save-dev \
+    pnpm add -D \
         jest \
         @types/jest \
         ts-jest \
@@ -235,9 +235,9 @@ EOL
     # Provide testing instructions if Jest was installed
     if [[ "$INSTALL_JEST" == "yes" || "$INSTALL_JEST" == 'y' ]]; then
         echo -e "${GREEN}Testing setup:${NC}"
-        echo -e "- Run tests: ${YELLOW}npm test${NC}"
-        echo -e "- Watch tests: ${YELLOW}npm run test:watch${NC}"
-        echo -e "- Test coverage: ${YELLOW}npm run test:coverage${NC}"
+        echo -e "- Run tests: ${YELLOW}pnpm test${NC}"
+        echo -e "- Watch tests: ${YELLOW}pnpm run test:watch${NC}"
+        echo -e "- Test coverage: ${YELLOW}pnpm run test:coverage${NC}"
     fi
 }
 
