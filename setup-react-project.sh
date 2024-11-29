@@ -97,13 +97,6 @@ setup_react_project() {
 }
 EOL
 
-    # Migrate eslint configuration
-    echo -e "${GREEN}Migrating ESLint configuration...${NC}"
-    rm eslint.config.js
-    npx @eslint/migrate-config .eslintrc.json
-    pnpm add -D globals @eslint/js @eslint/eslintrc
-    rm .eslintrc.json
-
     # Create Prettier configuration
     echo -e "${GREEN}Creating Prettier configuration...${NC}"
     cat > .prettierrc << EOL
@@ -122,7 +115,7 @@ EOL
 
     # Update package.json scripts
     echo -e "${GREEN}Updating package.json scripts...${NC}"
-    npm pkg set scripts.lint="eslint ."
+    npm pkg set scripts.lint="eslint . --ext .ts,.tsx --fix"
     npm pkg set scripts.format="prettier --write ."
     npm pkg set scripts.prepare="husky install"
 
