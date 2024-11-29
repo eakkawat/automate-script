@@ -86,6 +86,33 @@ EOL
     echo -e "${GREEN}Jest testing setup complete! 🧪${NC}"
 }
 
+
+# Update tsconfig file to use jest
+update_tsconfig_pure_bash() {
+    # Create a temporary file
+    cp tsconfig.json tsconfig.temp.json
+
+    # Add types to compiler options
+    awk '
+    /"jsx": "react-jsx",/ {
+        print $0
+        print "    \"esModuleInterop\": true,"
+        next
+    }
+    /"include":/ {
+        print "  \"include\": [\"src\", \"jest.setup.ts\"],"
+        next
+    }
+    {print}
+    ' tsconfig.temp.json > tsconfig.json
+
+    # Clean up
+    rm tsconfig.temp.json
+
+    echo -e "${GREEN}Updated tsconfig.json for Jest support ✅${NC}"
+}
+
+
 # Setup project function
 setup_react_project() {
     ##### Project name input
@@ -244,6 +271,10 @@ EOL
 
     # Provide testing instructions if Jest was installed
     if [[ "$INSTALL_JEST" == "yes" || "$INSTALL_JEST" == 'y' ]]; then
+        # Update tsconfig.json to include "jest.setup.ts"
+        update_tsconfig_pure_bash
+
+
         echo -e "${GREEN}Testing setup:${NC}"
         echo -e "- Run tests: ${YELLOW}pnpm test${NC}"
         echo -e "- Watch tests: ${YELLOW}pnpm run test:watch${NC}"
