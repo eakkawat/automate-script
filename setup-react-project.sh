@@ -33,11 +33,12 @@ setup_jest_testing() {
         @testing-library/react \
         @testing-library/jest-dom \
         @testing-library/user-event \
-        jest-environment-jsdom
+        jest-environment-jsdom \
+        identity-obj-proxy
 
     # Create Jest configuration
     echo -e "${GREEN}Creating Jest configuration...${NC}"
-    cat > jest.config.js << EOL
+    cat > jest.config.cjs << EOL
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
@@ -167,7 +168,13 @@ setup_react_project() {
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "@typescript-eslint/explicit-module-boundary-types": "off"
   },
-  "ignorePatterns": ["node_modules", "vite.config.ts", "dist"]
+  "ignorePatterns": [
+    "node_modules",
+    "vite.config.ts",
+    "dist",
+    "jest.setup.ts",
+    "jest.config.cjs"
+  ]
 }
 EOL
 
