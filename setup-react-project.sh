@@ -112,6 +112,29 @@ update_tsconfig_pure_bash() {
     echo -e "${GREEN}Updated tsconfig.json for Jest support ✅${NC}"
 }
 
+#Update tsconfig file setting @/* path for tsconfig path
+update_tsconfig_path(){
+  # Create a temporary file
+  cp tsconfig.json tsconfig.temp.json
+
+  awk '
+  /"skipLibCheck": true,/ {
+    print $0
+    print "    \"baseUrl\": \".\","
+    print "    \"paths\": {"
+    print "      \"@/*\": [\"src/*\"]"
+    print "    },"
+    next
+  }
+  {print}
+  ' tsconfig.temp.json > tsconfig.json
+
+  # Clean up
+  rm tsconfig.temp.json
+  
+  echo -e "${GREEN}Update tsconfig.json for @/* path${NC}"
+}
+
 
 # Setup project function
 setup_react_project() {
@@ -244,9 +267,26 @@ EOL
     npm pkg set scripts.prepare="husky install"
 
     # Install Husky for git hooks
+    echo -e "${GREEN}Installing husky...${NC}"
     pnpm add -D husky lint-staged
     npx husky install
     npx husky add .husky/pre-commit "npx lint-staged"
+
+    #Install tsconfig path for vit
+    echo -e "${GREEN}Installing tscofig path...${NC}"
+    pnpm add -D vite-tsconfig-paths
+    #Update tsconfig paths for vite
+    cat > vite.config.ts << EOL
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths'
+
+export default defineConfig({
+  plugins: [react(), tsconfigPaths()],
+})
+EOL
+    update_tsconfig_path
+
 
     # Create VSCode settings
     mkdir -p .vscode
