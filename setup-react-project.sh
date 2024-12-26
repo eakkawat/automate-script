@@ -135,6 +135,42 @@ update_tsconfig_path(){
   echo -e "${GREEN}Update tsconfig.json for @/* path${NC}"
 }
 
+setup_tailwind(){
+    echo -e "${GREEN}Setting up tailwind...${NC}"
+
+    # Install tailwind
+    pnpm add -D \
+        tailwindcss \
+        postcss \
+        autoprefixer \
+
+    npx tailwindcss init -p
+
+    # Config template paths
+    cat > tailwind.config.js << EOL
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+EOL
+
+    # Add the Tailwind directives to CSS
+    cat > ./src/index.css << EOL
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+EOL
+    echo -e "${GREEN}Updated tailwind config${NC}"
+
+}
+
 
 # Setup project function
 setup_react_project() {
@@ -150,6 +186,10 @@ setup_react_project() {
     ##### Ask about Jest testing
     read -p "Would you like to set up Jest testing? (yes/no): " INSTALL_JEST
     INSTALL_JEST=$(echo "$INSTALL_JEST" | tr '[:upper:]' '[:lower:]')
+
+    ##### Ask about tailwind
+    read -p "Would you like to install tailwind? (yes/no): " INSTALL_TAILWIND
+    INSTALL_TAILWIND=$(echo "$INSTALL_TAILWIND" | tr '[:upper:]' '[:lower:]')
 
 ########## MAIN PROJECT INSTALLATION ##########
     # Create Vite React TypeScript project
@@ -185,6 +225,11 @@ setup_react_project() {
     # Conditionally install Jest if user agrees
     if [[ "$INSTALL_JEST" == "yes" || "$INSTALL_JEST" == 'y' ]]; then
         setup_jest_testing
+    fi
+
+    #Conditionally install Tailwind if user agrees
+    if [[ "$INSTALL_TAILWIND" == "yes" || "$INSTALL_TAILWIND" == 'y' ]]; then
+      setup_tailwind
     fi
 
 ########### CONFIGURATION ##########
